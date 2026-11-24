@@ -1,0 +1,40 @@
+{
+  "id": "r",
+  "question": {
+    "type": "choice",
+    "instructions": "¿Qué gravedad tiene el problema?",
+    "criteria": {
+      "Estético": "Solo afecta al aspecto del producto",
+      "Molesto": "El producto funciona, pero con inconvenientes",
+      "Producto inutilizable": "El producto ya no cumple su función"
+    }
+  },
+  "children": [
+    {
+      "id": "r_0",
+      "question": {
+        "type": "choice",
+        "instructions": "¿Qué tipo de problema menciona la reseña?",
+        "criteria": {
+          "Apariencia": "Se menciona un defecto visual, como un arañazo.",
+          "Funcionamiento": "Se indica que el producto no funciona correctamente.",
+          "Comodidad de uso": "Se mencionan inconvenientes al utilizar el producto."
+        }
+      },
+      "children": [
+        {
+          "id": "r_0_0",
+          "question": {
+            "type": "choice",
+            "instructions": "¿Qué tamaño tiene el arañazo mencionado?",
+            "criteria": {
+              "Pequeño": "La reseña lo describe como pequeño.",
+              "Sin especificar": "La reseña no indica el tamaño."
+            }
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

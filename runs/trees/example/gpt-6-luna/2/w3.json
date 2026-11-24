@@ -1,0 +1,168 @@
+{
+  "id": "r",
+  "question": {
+    "type": "choice",
+    "instructions": "¿Qué gravedad tiene el problema?",
+    "criteria": {
+      "Estético": "Solo afecta al aspecto del producto",
+      "Molesto": "El producto funciona, pero con inconvenientes",
+      "Producto inutilizable": "El producto ya no cumple su función"
+    }
+  },
+  "children": [
+    {
+      "id": "r_0",
+      "question": {
+        "type": "noul",
+        "instructions": "¿El producto funciona correctamente según la reseña?",
+        "criteria": {
+          "true": "La reseña indica que funciona bien.",
+          "false": "La reseña indica que no funciona bien o que no cumple su función."
+        }
+      },
+      "children": [
+        {
+          "id": "r_0_0",
+          "question": {
+            "type": "choice",
+            "instructions": "¿Qué parte del producto se menciona como dañada?",
+            "criteria": {
+              "Tapa": "La reseña menciona un daño en la tapa.",
+              "Otra parte": "La reseña menciona un daño en otra parte del producto.",
+              "No se especifica": "La reseña no identifica la parte dañada."
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "r_0_1",
+          "question": {
+            "type": "score",
+            "instructions": "¿Qué tamaño tiene el arañazo según la reseña?",
+            "criteria": [
+              "Pequeño: Se describe como pequeño.",
+              "Mediano: Se describe como mediano.",
+              "Grande: Se describe como grande.",
+              "No especificado: No se indica su tamaño."
+            ]
+          },
+          "children": []
+        },
+        {
+          "id": "r_0_2",
+          "question": {
+            "type": "noul",
+            "instructions": "¿La reseña menciona algún otro defecto además del arañazo?",
+            "criteria": {
+              "true": "Se menciona al menos otro defecto.",
+              "false": "No se menciona ningún otro defecto."
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "r_1",
+      "question": {
+        "type": "choice",
+        "instructions": "¿Qué parte del producto presenta el problema descrito?",
+        "criteria": {
+          "Tapa": "El problema está en la tapa.",
+          "Otra parte": "El problema está en una parte distinta de la tapa."
+        }
+      },
+      "children": [
+        {
+          "id": "r_1_0",
+          "question": {
+            "type": "choice",
+            "instructions": "¿Qué tipo de defecto menciona la reseña?",
+            "criteria": {
+              "Arañazo": "La reseña menciona un arañazo.",
+              "Otro defecto": "La reseña menciona un defecto distinto.",
+              "Sin defecto específico": "No se identifica un tipo concreto de defecto."
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "r_1_1",
+          "question": {
+            "type": "choice",
+            "instructions": "¿Cómo describe la reseña el tamaño del defecto?",
+            "criteria": {
+              "Pequeño": "La reseña lo describe como pequeño.",
+              "Grande": "La reseña lo describe como grande.",
+              "No indicado": "La reseña no especifica su tamaño."
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "r_1_2",
+          "question": {
+            "type": "noul",
+            "instructions": "¿La reseña afirma que el producto funciona bien?",
+            "criteria": {
+              "true": "La reseña afirma que funciona bien.",
+              "false": "La reseña no afirma que funcione bien."
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "r_2",
+      "question": {
+        "type": "score",
+        "instructions": "¿Qué tamaño tiene el arañazo mencionado?",
+        "criteria": [
+          "Pequeño: La reseña lo describe como pequeño.",
+          "Mediano: La reseña indica un tamaño intermedio.",
+          "Grande: La reseña indica que es grande."
+        ]
+      },
+      "children": [
+        {
+          "id": "r_2_0",
+          "question": {
+            "type": "noul",
+            "instructions": "¿La reseña indica que el producto funciona bien?",
+            "criteria": {
+              "true": "La reseña afirma que funciona bien.",
+              "false": "La reseña no afirma que funcione bien."
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "r_2_1",
+          "question": {
+            "type": "choice",
+            "instructions": "¿Qué parte del producto se menciona?",
+            "criteria": {
+              "Tapa": "La reseña menciona la tapa.",
+              "Otra parte": "La reseña menciona una parte distinta de la tapa.",
+              "Ninguna": "La reseña no especifica una parte del producto."
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "r_2_2",
+          "question": {
+            "type": "noul",
+            "instructions": "¿La reseña menciona algún inconveniente aparte del arañazo?",
+            "criteria": {
+              "true": "Se menciona otro inconveniente además del arañazo.",
+              "false": "No se menciona ningún otro inconveniente."
+            }
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

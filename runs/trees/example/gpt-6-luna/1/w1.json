@@ -1,0 +1,41 @@
+{
+  "id": "r",
+  "question": {
+    "type": "choice",
+    "instructions": "¿Qué gravedad tiene el problema?",
+    "criteria": {
+      "Estético": "Solo afecta al aspecto del producto",
+      "Molesto": "El producto funciona, pero con inconvenientes",
+      "Producto inutilizable": "El producto ya no cumple su función"
+    }
+  },
+  "children": [
+    {
+      "id": "r_0",
+      "question": {
+        "type": "choice",
+        "instructions": "¿Cuándo dejó de cargar la batería?",
+        "criteria": {
+          "En las primeras semanas": "El problema apareció dentro de las dos primeras semanas.",
+          "Más adelante": "El problema apareció después de las primeras semanas.",
+          "No se indica": "La reseña no especifica cuándo ocurrió."
+        }
+      },
+      "children": [
+        {
+          "id": "r_0_0",
+          "question": {
+            "type": "choice",
+            "instructions": "¿Qué nivel de precisión temporal aporta la reseña?",
+            "criteria": {
+              "Duración concreta": "Indica un plazo específico, como dos semanas.",
+              "Referencia imprecisa": "Alude al momento del problema sin dar un plazo concreto.",
+              "Sin referencia temporal": "No aporta información sobre cuándo ocurrió."
+            }
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}
