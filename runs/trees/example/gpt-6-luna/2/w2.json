@@ -1,0 +1,91 @@
+{
+  "id": "r",
+  "question": {
+    "type": "choice",
+    "instructions": "¿Qué gravedad tiene el problema?",
+    "criteria": {
+      "Estético": "Solo afecta al aspecto del producto",
+      "Molesto": "El producto funciona, pero con inconvenientes",
+      "Producto inutilizable": "El producto ya no cumple su función"
+    }
+  },
+  "children": [
+    {
+      "id": "r_0",
+      "question": {
+        "type": "noul",
+        "instructions": "¿El producto sigue funcionando según indica la reseña?",
+        "criteria": {
+          "true": "La reseña indica que funciona.",
+          "false": "La reseña indica que no funciona o que no cumple su función."
+        }
+      },
+      "children": [
+        {
+          "id": "r_0_0",
+          "question": {
+            "type": "noul",
+            "instructions": "¿La reseña menciona un defecto físico en el producto?",
+            "criteria": {
+              "true": "La reseña señala un arañazo, rotura u otro defecto físico.",
+              "false": "La reseña no menciona ningún defecto físico."
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "r_0_1",
+          "question": {
+            "type": "choice",
+            "instructions": "¿Qué tamaño tiene el arañazo que menciona la reseña?",
+            "criteria": {
+              "Pequeño": "La reseña lo describe como pequeño.",
+              "Grande o extenso": "La reseña lo describe como grande, extenso o de tamaño considerable.",
+              "No especificado": "La reseña no indica el tamaño del arañazo."
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "r_1",
+      "question": {
+        "type": "choice",
+        "instructions": "¿Qué tipo de defecto menciona la reseña?",
+        "criteria": {
+          "Daño superficial": "Menciona un arañazo u otro defecto visible.",
+          "Inconveniente de uso": "Menciona una dificultad o molestia al utilizarlo.",
+          "Fallo funcional": "Menciona un problema que impide que el producto cumpla su función."
+        }
+      },
+      "children": [
+        {
+          "id": "r_1_0",
+          "question": {
+            "type": "noul",
+            "instructions": "¿La reseña indica que el producto funciona bien?",
+            "criteria": {
+              "true": "La reseña afirma que el producto funciona bien.",
+              "false": "La reseña no afirma que el producto funcione bien."
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "r_1_1",
+          "question": {
+            "type": "choice",
+            "instructions": "¿Qué parte del producto se menciona como afectada?",
+            "criteria": {
+              "Tapa": "La reseña menciona la tapa.",
+              "Otra parte": "La reseña menciona una parte distinta de la tapa.",
+              "Ninguna parte específica": "La reseña no identifica una parte concreta."
+            }
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

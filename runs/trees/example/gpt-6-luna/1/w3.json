@@ -1,0 +1,166 @@
+{
+  "id": "r",
+  "question": {
+    "type": "choice",
+    "instructions": "¿Qué gravedad tiene el problema?",
+    "criteria": {
+      "Estético": "Solo afecta al aspecto del producto",
+      "Molesto": "El producto funciona, pero con inconvenientes",
+      "Producto inutilizable": "El producto ya no cumple su función"
+    }
+  },
+  "children": [
+    {
+      "id": "r_0",
+      "question": {
+        "type": "noul",
+        "instructions": "¿La batería dejó de cargar por completo?",
+        "criteria": {
+          "true": "La batería ya no carga en absoluto.",
+          "false": "La batería todavía carga, aunque sea de forma irregular o limitada."
+        }
+      },
+      "children": [
+        {
+          "id": "r_0_0",
+          "question": {
+            "type": "choice",
+            "instructions": "¿Cuándo indica la reseña que apareció el problema?",
+            "criteria": {
+              "A las dos semanas": "La reseña sitúa el problema dos semanas después.",
+              "En otro momento": "La reseña indica un plazo distinto.",
+              "No especificado": "La reseña no indica cuándo apareció."
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "r_0_1",
+          "question": {
+            "type": "choice",
+            "instructions": "¿Qué componente menciona la reseña como afectado?",
+            "criteria": {
+              "La batería": "La reseña señala la batería.",
+              "Otro componente": "La reseña señala un componente distinto.",
+              "No especificado": "La reseña no identifica un componente."
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "r_0_2",
+          "question": {
+            "type": "noul",
+            "instructions": "¿La reseña atribuye el problema a una causa concreta?",
+            "criteria": {
+              "true": "La reseña menciona una causa concreta.",
+              "false": "La reseña no menciona una causa concreta."
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "r_1",
+      "question": {
+        "type": "choice",
+        "instructions": "¿Cuándo empezó el problema de carga?",
+        "criteria": {
+          "Al principio": "El problema apareció durante los primeros días de uso.",
+          "A las dos semanas": "El problema apareció tras aproximadamente dos semanas.",
+          "Más tarde": "El problema apareció después de varias semanas o más."
+        }
+      },
+      "children": [
+        {
+          "id": "r_1_0",
+          "question": {
+            "type": "noul",
+            "instructions": "¿La reseña menciona un plazo concreto para la aparición del problema?",
+            "criteria": {
+              "true": "Se indica un plazo concreto.",
+              "false": "No se indica un plazo concreto."
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "r_1_1",
+          "question": {
+            "type": "choice",
+            "instructions": "¿Qué unidad de tiempo se usa para describir cuándo apareció el problema?",
+            "criteria": {
+              "Días": "El plazo se expresa en días.",
+              "Semanas": "El plazo se expresa en semanas.",
+              "Meses": "El plazo se expresa en meses.",
+              "No indicada": "No se menciona una unidad de tiempo."
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "r_1_2",
+          "question": {
+            "type": "noul",
+            "instructions": "¿La reseña sitúa el problema en un momento posterior al inicio del uso?",
+            "criteria": {
+              "true": "El problema se describe como aparecido después de empezar a usar el producto.",
+              "false": "La reseña no lo sitúa después del inicio del uso."
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "r_2",
+      "question": {
+        "type": "choice",
+        "instructions": "¿Qué aspecto del producto está afectado según la reseña?",
+        "criteria": {
+          "Carga de la batería": "La reseña menciona que la batería dejó de cargar.",
+          "Otro aspecto": "La reseña menciona un problema distinto de la carga."
+        }
+      },
+      "children": [
+        {
+          "id": "r_2_0",
+          "question": {
+            "type": "choice",
+            "instructions": "¿Cuánto tiempo transcurrió hasta que apareció el problema?",
+            "criteria": {
+              "Dos semanas": "La reseña indica que ocurrió a las dos semanas.",
+              "Otro plazo o no especificado": "La reseña indica otro plazo o no señala cuándo ocurrió."
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "r_2_1",
+          "question": {
+            "type": "choice",
+            "instructions": "¿Qué cambio en el funcionamiento de la batería describe la reseña?",
+            "criteria": {
+              "Dejó de cargar": "La batería ya no cargaba.",
+              "Otro cambio": "La reseña describe un cambio distinto en el funcionamiento de la batería."
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "r_2_2",
+          "question": {
+            "type": "noul",
+            "instructions": "¿La reseña menciona algún problema adicional aparte del descrito?",
+            "criteria": {
+              "true": "La reseña menciona otro problema.",
+              "false": "La reseña no menciona otro problema."
+            }
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

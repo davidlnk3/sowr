@@ -1,0 +1,25 @@
+[project]
+name = "sowr"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "davidlnk3", email = "121168800+davidlnk3@users.noreply.github.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "openai>=3.59.0",
+    "perplexityai>=0.44.0",
+]
+
+[project.scripts]
+sowr = "sowr:main"
+
+[build-system]
+requires = ["uv_build>=0.13.1,<0.14.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]

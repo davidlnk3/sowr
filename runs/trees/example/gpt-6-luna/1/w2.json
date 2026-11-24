@@ -1,0 +1,89 @@
+{
+  "id": "r",
+  "question": {
+    "type": "choice",
+    "instructions": "¿Qué gravedad tiene el problema?",
+    "criteria": {
+      "Estético": "Solo afecta al aspecto del producto",
+      "Molesto": "El producto funciona, pero con inconvenientes",
+      "Producto inutilizable": "El producto ya no cumple su función"
+    }
+  },
+  "children": [
+    {
+      "id": "r_0",
+      "question": {
+        "type": "noul",
+        "instructions": "¿La batería carga actualmente?",
+        "criteria": {
+          "true": "La batería carga actualmente.",
+          "false": "La batería no carga actualmente."
+        }
+      },
+      "children": [
+        {
+          "id": "r_0_0",
+          "question": {
+            "type": "noul",
+            "instructions": "¿La batería dejó de cargar dentro de las primeras semanas de uso?",
+            "criteria": {
+              "true": "La reseña indica que dejó de cargar a las dos semanas.",
+              "false": "La reseña no indica que dejara de cargar a las dos semanas."
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "r_0_1",
+          "question": {
+            "type": "choice",
+            "instructions": "¿Qué componente del producto se menciona en la reseña?",
+            "criteria": {
+              "Batería": "La reseña menciona la batería.",
+              "Otro componente": "La reseña menciona un componente distinto de la batería.",
+              "Ninguno": "La reseña no menciona ningún componente específico."
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    {
+      "id": "r_1",
+      "question": {
+        "type": "choice",
+        "instructions": "¿Cuándo dejó de cargar la batería?",
+        "criteria": {
+          "Al poco tiempo": "Dejó de cargar a las dos semanas de uso.",
+          "Más adelante": "Dejó de cargar después de un periodo más largo de uso."
+        }
+      },
+      "children": [
+        {
+          "id": "r_1_0",
+          "question": {
+            "type": "choice",
+            "instructions": "¿Qué componente del producto se menciona en la reseña?",
+            "criteria": {
+              "Batería": "La reseña menciona la batería.",
+              "Otro componente": "La reseña menciona un componente distinto de la batería."
+            }
+          },
+          "children": []
+        },
+        {
+          "id": "r_1_1",
+          "question": {
+            "type": "noul",
+            "instructions": "¿La reseña describe un problema de funcionamiento?",
+            "criteria": {
+              "true": "Se describe un problema que afecta al funcionamiento del producto.",
+              "false": "No se describe un problema que afecte al funcionamiento del producto."
+            }
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

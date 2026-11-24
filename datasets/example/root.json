@@ -1,0 +1,9 @@
+{
+  "type": "choice",
+  "instructions": "¿Qué gravedad tiene el problema?",
+  "criteria": {
+    "Estético": "Solo afecta al aspecto del producto",
+    "Molesto": "El producto funciona, pero con inconvenientes",
+    "Producto inutilizable": "El producto ya no cumple su función"
+  }
+}
