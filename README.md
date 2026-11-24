@@ -2,7 +2,10 @@
   <img src="assets/icon.png" alt="sowr icon" width="160">
 </p>
 
-# sowr
+<div align="center">
+  # sowr
+</div>
+
 
 **System One With Reasoning.** A research project on whether a fast decision model (the *Decider*) gets better when it first answers simpler sub-decisions.
 
