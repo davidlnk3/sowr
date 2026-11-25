@@ -1,9 +1,9 @@
 {
   "type": "choice",
-  "instructions": "¿Qué gravedad tiene el problema?",
+  "instructions": "How severe is the problem?",
   "criteria": {
-    "Estético": "Solo afecta al aspecto del producto",
-    "Molesto": "El producto funciona, pero con inconvenientes",
-    "Producto inutilizable": "El producto ya no cumple su función"
+    "Cosmetic": "It only affects how the product looks",
+    "Annoying": "The product works, but with inconveniences",
+    "Unusable": "The product no longer does its job"
   }
 }

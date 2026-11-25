@@ -1,2 +1,2 @@
-{"id": "1", "state": {"review": "La batería dejó de cargar a las dos semanas."}, "label": "Producto inutilizable"}
-{"id": "2", "state": {"review": "Funciona bien, pero la tapa tiene un arañazo pequeño."}, "label": "Estético"}
+{"id": "1", "state": {"review": "The battery stopped charging after two weeks."}, "label": "Unusable"}
+{"id": "2", "state": {"review": "Works fine, but the lid has a small scratch."}, "label": "Cosmetic"}

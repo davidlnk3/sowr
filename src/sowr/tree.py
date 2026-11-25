@@ -16,6 +16,11 @@ def descendants(node):
         yield from descendants(child)
 
 
+def considerations(tree):
+    """The instructions of every sub-decision, for the Context-only baseline."""
+    return [n["question"]["instructions"] for n in descendants(tree)]
+
+
 def answer_tree(tree, state, decide, carry="children"):
     """Answer every decision in the tree, deepest level first.
 

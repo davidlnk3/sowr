@@ -1,6 +1,6 @@
 # sowr
 
-Research on whether a decision model answers a question more accurately when it first answers a tree of generated sub-decisions about the same input.
+System One With Reasoning. Research on whether a fast decision model answers a decision more accurately when it first answers a reusable tree of generated sub-decisions.
 
 ## Language
 
@@ -25,7 +25,7 @@ Any question in the tree other than the root decision, which the Decider answers
 _Avoid_: sub-question, child question, node question
 
 **Decision tree**:
-The root decision together with all its sub-decisions, generated for a single input.
+The root decision together with all its sub-decisions. It is written once from the root decision and a few unlabeled example inputs, never the inputs it will be used on, and reused for every input of that root decision.
 _Avoid_: sub-decision tree, question tree
 
 **Answer type**:
@@ -53,3 +53,24 @@ _Avoid_: extra information, context, propagated answer
 **Baseline**:
 The Decider answering the root decision alone, without a decision tree, on the same input.
 _Avoid_: control, vanilla
+
+**Generator-only baseline**:
+The Generator answering the root decision directly, on the same input.
+
+**Context-only baseline**:
+The Decider answering the root decision with the tree's sub-decisions given as context but not answered. It separates the value of the decomposition from the value of answering it.
+_Avoid_: unanswered tree
+
+### Reuse
+
+**Tree library**:
+The stored decision trees, found by how similar their root decision is to a new one.
+_Avoid_: tree database, cache, RAG store
+
+**Hit**:
+A new root decision whose closest stored root decision is at least as similar as the similarity threshold, so that tree's sub-decisions are reused under the new root decision. Otherwise it is a miss, and a new tree is written and added to the library.
+_Avoid_: match, cache hit
+
+**Similarity threshold**:
+The minimum similarity between root decisions for a hit.
+_Avoid_: cutoff

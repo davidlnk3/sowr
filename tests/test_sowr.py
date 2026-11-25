@@ -5,7 +5,7 @@ import pytest
 from sowr import llm
 from sowr.decision import normalize
 from sowr.experiment import run
-from sowr.tree import answer_tree, truncate
+from sowr.tree import answer_tree, considerations, truncate
 
 ROOT = {"type": "choice", "instructions": "root?", "criteria": {"a": "A", "b": "B"}}
 GEN = llm.Generator(model="fake")
@@ -41,26 +41,29 @@ def count_nodes(node):
 
 @pytest.mark.parametrize("width,depth", [(1, 1), (2, 2), (3, 2)])
 def test_build_tree_shape(width, depth):
-    tree = llm.build_tree(GEN, {"x": 1}, ROOT, width, depth, fake_chat(width))
+    tree = llm.build_tree(GEN, [{"x": 1}], ROOT, width, depth, chat=fake_chat(width))
     assert count_nodes(tree) == sum(width**k for k in range(depth + 1))
     assert tree["question"] == ROOT
 
 
-def test_generator_gets_chain_from_root_to_parent():
+def test_generator_gets_chain_examples_and_seed():
     seen = []
     inner = fake_chat(2)
 
     def chat(generator, messages, schema):
-        seen.append(json.loads(messages[1]["content"])["decision_chain"])
+        seen.append((json.loads(messages[1]["content"]), generator.params["seed"]))
         return inner(generator, messages, schema)
 
-    llm.build_tree(GEN, {"x": 1}, ROOT, 2, 2, chat)
-    assert [len(c) for c in seen] == [1, 2, 2]
-    assert all(c[0] == ROOT for c in seen)
+    examples = [{"x": 1}, {"x": 2}]
+    llm.build_tree(GEN, examples, ROOT, 2, 2, seed=7, chat=chat)
+    assert [len(m["decision_chain"]) for m, _ in seen] == [1, 2, 2]
+    assert all(m["decision_chain"][0] == ROOT for m, _ in seen)
+    assert all(m["example_inputs"] == examples and "input" not in m for m, _ in seen)
+    assert {seed for _, seed in seen} == {7}
 
 
 def test_truncate_keeps_top_levels():
-    tree = llm.build_tree(GEN, {}, ROOT, 3, 2, fake_chat(3))
+    tree = llm.build_tree(GEN, [], ROOT, 3, 2, chat=fake_chat(3))
     shallow = truncate(tree, 1)
     assert count_nodes(shallow) == 4
     assert [c["question"] for c in shallow["children"]] == [c["question"] for c in tree["children"]]
@@ -75,7 +78,7 @@ def test_depth_zero_is_one_root_call():
 
 
 def test_call_pattern_and_children_carry():
-    tree = llm.build_tree(GEN, {}, ROOT, 3, 2, fake_chat(3))
+    tree = llm.build_tree(GEN, [], ROOT, 3, 2, chat=fake_chat(3))
     decide = FakeDecider()
     answers, calls = answer_tree(tree, {"x": 1}, decide)
     # 3 leaf sibling groups + 3 middle nodes + root
@@ -91,7 +94,7 @@ def test_call_pattern_and_children_carry():
 
 
 def test_subtree_carry_includes_grandchildren():
-    tree = llm.build_tree(GEN, {}, ROOT, 2, 2, fake_chat(2))
+    tree = llm.build_tree(GEN, [], ROOT, 2, 2, chat=fake_chat(2))
     decide = FakeDecider()
     answer_tree(tree, {}, decide, carry="subtree")
     assert len(decide.calls[-1][1]["carried_decisions"]) == 6
@@ -106,11 +109,11 @@ def test_invalid_generator_output_is_retried_then_fails():
         json.dumps({"sub_decisions": [{"type": "score", "instructions": "q?",
                                        "options": [{"label": "low", "description": "l"}, {"label": "high", "description": "h"}]}]}),
     ])
-    children = llm.generate_children(GEN, {}, [ROOT], 1, lambda *a: next(replies))
+    children = llm.generate_children(GEN, [], [ROOT], 1, lambda *a: next(replies))
     assert children == [{"type": "score", "instructions": "q?", "criteria": ["low: l", "high: h"]}]
 
     with pytest.raises(llm.GenerationFailed):
-        llm.generate_children(GEN, {}, [ROOT], 1, lambda *a: "not json")
+        llm.generate_children(GEN, [], [ROOT], 1, lambda *a: "not json")
 
 
 def test_to_question_shapes():
@@ -125,29 +128,51 @@ def test_normalize_noul():
     assert normalize({"type": "choice", "choice": "a", "confidence": 0.7, "probabilities": {}})["answer"] == "a"
 
 
+def test_considerations_lists_every_sub_decision():
+    tree = llm.build_tree(GEN, [], ROOT, 2, 2, chat=fake_chat(2))
+    assert len(considerations(tree)) == 6
+    assert considerations(truncate(tree, 1)) == [c["question"]["instructions"] for c in tree["children"]]
+
+
 def test_run_writes_all_conditions_and_reuses_trees(tmp_path):
     out = tmp_path / "runs"
     args = ("datasets/example", "gpt-6-luna", [1, 2], 2, 10, out)
-    run(*args, decide=FakeDecider(), chat=fake_chat_for_any_width())
+    validation = [json.loads(line)["state"] for line in open("datasets/example/validation.jsonl")]
+    seen_examples = []
+
+    def chat(generator, messages, schema):
+        if schema is llm.SUB_DECISIONS_SCHEMA:
+            seen_examples.append(json.loads(messages[1]["content"])["example_inputs"])
+        return fake_chat_for_any_width()(generator, messages, schema)
+
+    decider = FakeDecider()
+    run(*args, seeds=(0, 1), decide=decider, chat=chat)
     rows = [json.loads(line) for line in (out / "results.jsonl").read_text().splitlines()]
-    # per item: baseline + generator_only + per width (depth 1, depth 2, depth 2 subtree)
-    assert len(rows) == 2 * (2 + 2 * 3)
+    # per item: baseline + generator_only + per (width, seed):
+    # tree and context_only at depths 1 and 2, plus tree with subtree carry at depth 2
+    assert len(rows) == 2 * (2 + 2 * 2 * 5)
     assert not any(r["error"] for r in rows)
     trees = sorted(p.relative_to(out).as_posix() for p in out.rglob("*.json"))
-    assert trees == [f"trees/example/gpt-6-luna/{i}/w{w}.json" for i in ("1", "2") for w in (1, 2)]
+    assert trees == [f"trees/example/gpt-6-luna/w{w}-s{s}.json" for w in (1, 2) for s in (0, 1)]
+    # trees are written from validation inputs only, once per (width, seed), not per item
+    assert all(e == validation for e in seen_examples)
+    context_calls = [s for ids, s in decider.calls if "considerations" in s]
+    assert len(context_calls) == 2 * 2 * 2 * 2 and all(s["review"] for s in context_calls)
 
     # second run must not call the Generator for trees again
     def no_tree_chat(generator, messages, schema):
         assert schema is llm.ANSWER_SCHEMA
-        return json.dumps({"answer": "Estético"})
+        return json.dumps({"answer": "Cosmetic"})
 
-    run(*args, decide=FakeDecider(), chat=no_tree_chat)
+    run(*args, seeds=(0, 1), decide=FakeDecider(), chat=no_tree_chat)
+    rerun = [json.loads(line) for line in (out / "results.jsonl").read_text().splitlines()][len(rows):]
+    assert len(rerun) == len(rows) and not any(r["error"] for r in rerun)
 
 
 def fake_chat_for_any_width():
     def chat(generator, messages, schema):
         if schema is llm.ANSWER_SCHEMA:
-            return json.dumps({"answer": "Estético"})
+            return json.dumps({"answer": "Cosmetic"})
         width = int(messages[0]["content"].split("Write exactly ")[1].split()[0])
         return fake_chat(width)(generator, messages, schema)
 
