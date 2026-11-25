@@ -19,7 +19,14 @@ See [GLOSSARY.md](GLOSSARY.md) for terms and [docs/adr/](docs/adr/) for design d
 
 ## Usage
 
-Needs `OPENROUTER_API_KEY` (Generator) and `PERPLEXITY_API_KEY` (Decider) in the environment or in `.env`.
+Put both API keys in `.env` (it is gitignored). `uv run --env-file .env` loads them:
+
+```sh
+OPENROUTER_API_KEY=...   # Generator
+PERPLEXITY_API_KEY=...   # Decider
+```
+
+Then run:
 
 ```sh
 uv run --env-file .env sowr datasets/example --baseline-repeats 3
@@ -27,3 +34,7 @@ uv run pytest
 ```
 
 A dataset is a directory with `root.json` (the root decision), `items.jsonl` (evaluation items, `{"id", "state", "label"}` per line) and `validation.jsonl` (held-out items in the same format, whose inputs the Generator sees as examples). Results go to `runs/results.jsonl`, and trees are cached under `runs/trees/`, one per width and Generator seed.
+
+## Status
+
+Stage 1 runs end to end. The example dataset only checks that the pipeline works: it has two easy items, and every condition gets both right. Comparing conditions needs a real labeled dataset that is hard enough for the Decider alone to make mistakes, plus an analysis of accuracy and calls per condition, with the mean and spread across the three trees.
