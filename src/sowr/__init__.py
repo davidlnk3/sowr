@@ -12,8 +12,9 @@ def main() -> None:
     parser.add_argument("--max-depth", type=int, default=2)
     parser.add_argument("--limit", type=int, default=10, help="number of items (10 = pilot)")
     parser.add_argument("--baseline-repeats", type=int, default=1, help="use 3 for the determinism check")
+    parser.add_argument("--seeds", default="0,1,2", help="one tree per Generator seed and width")
     parser.add_argument("--out", default="runs", help="results.jsonl and saved trees go here")
     args = parser.parse_args()
 
     run(args.dataset, args.generator, [int(w) for w in args.widths.split(",")], args.max_depth,
-        args.limit, args.out, args.baseline_repeats)
+        args.limit, args.out, args.baseline_repeats, [int(s) for s in args.seeds.split(",")])

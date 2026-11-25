@@ -1,6 +1,6 @@
 import json
 import os
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from openai import OpenAI
 
@@ -92,17 +92,18 @@ SUB_DECISIONS_SCHEMA = {
 
 GENERATE_PROMPT = """You break a decision into simpler sub-decisions.
 
-You get an input and a chain of decisions, from the root decision down to a parent decision. Write exactly {width} sub-decisions about the same input whose answers would help answer the parent decision.
+You get a chain of decisions, from the root decision down to a parent decision, and a few example inputs. The decisions will be asked about many inputs like these, one input at a time. Write exactly {width} sub-decisions whose answers would help answer the parent decision for any such input.
 
 Rules:
-- Every sub-decision must be answerable from the input alone.
+- Every sub-decision must be answerable from a single input of this kind alone.
+- Do not refer to any example input or to facts from them.
 - Sub-decisions must cover different aspects. Do not reword each other or the parent.
 - Never state, assume or hint at the answer to the parent or to any decision in the chain.
 - Pick the type of each sub-decision:
   - "noul": a yes/no question. Give exactly two options, labelled "true" and "false", each describing when it applies.
   - "choice": one of two or more named options. Give each a short label and a description.
   - "score": a position on an ordered scale. Give two or more options, ordered from lowest to highest.
-- Write in the language of the input."""
+- Write in the language of the inputs."""
 
 
 def to_question(sub):
@@ -124,11 +125,14 @@ def to_question(sub):
     return {"type": kind, "instructions": sub["instructions"], "criteria": criteria}
 
 
-def generate_children(generator, state, chain, width, chat=chat):
-    """Write `width` sub-decisions for the last decision in `chain` (root first)."""
+def generate_children(generator, examples, chain, width, chat=chat):
+    """Write `width` sub-decisions for the last decision in `chain` (root first).
+
+    `examples` are unlabeled example inputs, never the inputs the tree will be used on.
+    """
     messages = [
         {"role": "system", "content": GENERATE_PROMPT.format(width=width)},
-        {"role": "user", "content": json.dumps({"input": state, "decision_chain": chain}, ensure_ascii=False)},
+        {"role": "user", "content": json.dumps({"example_inputs": examples, "decision_chain": chain}, ensure_ascii=False)},
     ]
 
     def parse(reply):
@@ -140,14 +144,15 @@ def generate_children(generator, state, chain, width, chat=chat):
     return _with_retries(generator, messages, SUB_DECISIONS_SCHEMA, parse, chat)
 
 
-def build_tree(generator, state, root_question, width, depth, chat=chat):
-    """Build the decision tree breadth-first, one Generator call per sibling group."""
+def build_tree(generator, examples, root_question, width, depth, seed=0, chat=chat):
+    """Build a reusable decision tree breadth-first, one Generator call per sibling group."""
+    generator = replace(generator, params={**generator.params, "seed": seed})
     root = {"id": "r", "question": root_question, "children": []}
     level = [(root, [root_question])]
     for _ in range(depth):
         next_level = []
         for node, chain in level:
-            for i, question in enumerate(generate_children(generator, state, chain, width, chat)):
+            for i, question in enumerate(generate_children(generator, examples, chain, width, chat)):
                 child = {"id": f"{node['id']}_{i}", "question": question, "children": []}
                 node["children"].append(child)
                 next_level.append((child, chain + [question]))
